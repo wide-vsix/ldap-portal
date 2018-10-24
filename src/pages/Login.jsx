@@ -10,11 +10,16 @@ import axios from 'axios';
 const styles = {
   root: {
     height: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   paper: {
     flexGrow: 1,
-    maxWidth: 400,
-    padding: 20,
+    maxWidth: 450,
+    // minHeight: 500,
+    padding: 40,
+    boxSizing: 'border-box',
   },
   userID: {
     width: '100%',
@@ -23,7 +28,7 @@ const styles = {
     width: '100%',
   },
   button: {
-    width: '100%',
+    float: 'right',
   },
 };
 
@@ -31,6 +36,7 @@ class Login extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      err: [],
       userID: '',
       password: '',
     };
@@ -40,11 +46,11 @@ class Login extends React.Component {
       <div className={this.props.classes.root}>
         <Grid container justify="center">
           <Paper className={this.props.classes.paper}>
-            <form action="javascript:void(0)" onSubmit={this.login.bind(this)}>
+            <form onSubmit={this.login.bind(this)}>
               <Grid container spacing={24}>
                 <Grid item xs={12}>
-                  <Typography gutterBottom variant="subtitle1">
-                    Standard license
+                  <Typography gutterBottom variant="h5" align="center">
+                    LogIn
                   </Typography>
                 </Grid>
                 <Grid item xs={12}>
@@ -72,7 +78,7 @@ class Login extends React.Component {
                   />
                 </Grid>
                 <Grid item xs={12}>
-                  <Button type="submit" variant="contained" color="primary" className={this.props.classes.button} onSubmit={this.login.bind(this)}>
+                  <Button type="submit" variant="contained" color="primary" className={this.props.classes.button}>
                     Login
                   </Button>
                 </Grid>
@@ -83,11 +89,18 @@ class Login extends React.Component {
       </div>
     );
   }
-  async login() {
-    const {data} = await axios.post('/api/auth', {userID: this.state.userID, password: this.state.password});
-    if (data.ok) {
-      window.localStorage.setItem('token', data.token);
-      this.props.history.push('/');
+  async login(e) {
+    e.preventDefault();
+    try {
+      const {data} = await axios.post('/api/auth', {userID: this.state.userID, password: this.state.password});
+      if (data.ok) {
+        window.localStorage.setItem('token', data.token);
+        this.props.history.push('/');
+      }
+    } catch (err) {
+      const message = err.response ? err.response.data.message : err.message;
+      const newErr = this.state.err.concat();
+      newErr.push({timestamp: (new Date).valueOf(), message});
     }
   }
 }

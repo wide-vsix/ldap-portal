@@ -5,6 +5,7 @@ import {createBrowserHistory} from 'history';
 import Index from './pages/Index.jsx';
 import Login from './pages/Login.jsx';
 import Pubkey from './pages/Pubkey.jsx';
+import Password from './pages/Password.jsx';
 
 const styles = {
   root: {
@@ -35,6 +36,7 @@ class Layout extends React.Component {
             <Auth>
               <Route path='/' component={Index} exact />
               <Route path='/pubkey' component={Pubkey} exact />
+              <Route path='/password' component={Password} exact />
             </Auth>
           </Switch>
         </Router>

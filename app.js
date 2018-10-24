@@ -6,8 +6,8 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const {log} = require('./lib');
 
-const index = require('./routes');
-const api = require('./routes/api');
+const index = require('./routes')(log.logger);
+const api = require('./routes/api')(log.logger);
 
 const port = process.env.port || 3000;
 const app = express();

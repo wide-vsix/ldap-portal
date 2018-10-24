@@ -1,18 +1,23 @@
 const express = require('express');
 const router = express();
 
-router.use((req, res, next)=>{
-  res.render('index');
-});
+module.exports = (logger)=>{
+  router.use((req, res, next)=>{
+    res.render('index');
+  });
 
-router.use((err, req, res, next)=>{
-  const message = err.message;
-  let status = err.status==null ? 500 : err.status;
-  const stack = req.app.get('env') === 'development' ? err.stack : null;
+  router.use((err, req, res, next)=>{
+    const message = err.message;
+    let status = err.status==null ? 500 : err.status;
+    const stack = req.app.get('env') === 'development' ? err.stack : null;
 
-  res.status(status);
-  res.render('error', {status, message, stack});
-});
+    res.status(status);
+    res.render('error', {status, message, stack});
 
+    if (status == 500) {
+      logger.error(err.stack);
+    }
+  });
 
-module.exports = router;
+  return router;
+};
