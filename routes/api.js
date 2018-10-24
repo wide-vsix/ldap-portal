@@ -84,7 +84,7 @@ router.use((err, req, res, next) => {
 });
 
 function authed(req, res, next) {
-  const {token} = req.body;
+  const token = req.body.token || req.query.token;
   if (token == null) {
     const err = new Error('Unauthorized');
     err.status = 403;

@@ -1,14 +1,8 @@
 const express = require('express');
 const router = express();
 
-router.get('/', (req, res, next)=>{
-  res.render('index');
-});
-
 router.use((req, res, next)=>{
-  const err = new Error('Not Found');
-  err.status = 404;
-  next(err);
+  res.render('index');
 });
 
 router.use((err, req, res, next)=>{
