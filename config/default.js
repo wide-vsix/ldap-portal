@@ -8,5 +8,5 @@ module.exports = {
   },
   domain: 'dc=hirano,dc=work',
   secret: 'secret',
-  adminPassword: 'secret',
+  adminPassword: process.env.PASSWORD,
 };

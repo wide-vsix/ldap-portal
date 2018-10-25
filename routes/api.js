@@ -1,11 +1,8 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const config = require('config');
-const shellescape = require('shell-escape');
-const {exec} = require('child_process');
 const router = express();
 const lib = require('../lib');
-const {nthash} = require('smbhash');
 
 module.exports = (logger)=>{
   router.post('/auth', async (req, res, next)=>{
@@ -44,28 +41,8 @@ module.exports = (logger)=>{
 
   router.post('/password', authed, async (req, res, next)=>{
     const {password, newPassword} = req.body;
-    if (typeof newPassword != 'string' || newPassword.length < 8) {
-      const err = new Error('invalid new password');
-      err.status = 400;
-      return next(err);
-    }
     try {
-      const userPassword = await new Promise((resolve, reject)=>{
-        exec(shellescape(['/usr/sbin/slappasswd', '-c', '$6$%.8s', '-s', newPassword]), (err, stdout, stderr)=>{
-          if (err) {
-            reject(err);
-          } else {
-            resolve(stdout.trim());
-          }
-        });
-      });
-      const sambaNTPassword = nthash(newPassword);
-      const result = await lib.ldap.updatePassword(req.userID, password, userPassword, sambaNTPassword);
-      if (!result) {
-        const err = new Error('invalid old password');
-        err.status = 400;
-        return next(err);
-      }
+      await lib.ldap.updatePassword(req.userID, password, newPassword);
       res.json({ok: true});
     } catch (err) {
       next(err);
