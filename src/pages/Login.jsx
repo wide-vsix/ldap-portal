@@ -5,6 +5,9 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import Snackbar from '@material-ui/core/Snackbar';
+import SnackbarContent from '@material-ui/core/SnackbarContent';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import axios from 'axios';
 
 const styles = {
@@ -36,7 +39,8 @@ class Login extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      err: [],
+      err: null,
+      progress: false,
       userID: '',
       password: '',
     };
@@ -44,6 +48,14 @@ class Login extends React.Component {
   render() {
     return (
       <div className={this.props.classes.root}>
+        <Snackbar open={this.state.err!=null} autoHideDuration={2000} anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left',
+        }} onClose={()=>{
+          this.setState({err: null});
+        }}>
+          <SnackbarContent message={this.state.err}/>
+        </Snackbar>
         <Grid container justify="center">
           <Paper className={this.props.classes.paper}>
             <form onSubmit={this.login.bind(this)}>
@@ -78,9 +90,16 @@ class Login extends React.Component {
                   />
                 </Grid>
                 <Grid item xs={12}>
-                  <Button type="submit" variant="contained" color="primary" className={this.props.classes.button}>
-                    Login
-                  </Button>
+                  {this.state.progress
+                    ?
+                    <Grid container justify="center">
+                      <CircularProgress/>
+                    </Grid>
+                    :
+                    <Button type="submit" variant="contained" color="primary" className={this.props.classes.button}>
+                      Login
+                    </Button>
+                  }
                 </Grid>
               </Grid>
             </form>
@@ -91,16 +110,17 @@ class Login extends React.Component {
   }
   async login(e) {
     e.preventDefault();
+    const {userID, password} = this.state;
     try {
-      const {data} = await axios.post('/api/auth', {userID: this.state.userID, password: this.state.password});
+      this.setState({progress: true});
+      const {data} = await axios.post('/api/auth', {userID, password});
       if (data.ok) {
         window.localStorage.setItem('token', data.token);
         this.props.history.push('/');
       }
+      this.setState({progress: false});
     } catch (err) {
-      const message = err.response ? err.response.data.message : err.message;
-      const newErr = this.state.err.concat();
-      newErr.push({timestamp: (new Date).valueOf(), message});
+      this.setState({err: err.response ? err.response.data.message : err.message, progress: false});
     }
   }
 }
