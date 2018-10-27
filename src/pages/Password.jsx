@@ -8,6 +8,7 @@ import Button from '@material-ui/core/Button';
 import axios from 'axios';
 import Snackbar from '@material-ui/core/Snackbar';
 import SnackbarContent from '@material-ui/core/SnackbarContent';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const styles = {
   root: {
@@ -40,6 +41,7 @@ class Password extends React.Component {
     const token = window.localStorage.getItem('token');
     this.state = {
       err: null,
+      progress: false,
       token,
       password: '',
       newPassword: '',
@@ -49,7 +51,7 @@ class Password extends React.Component {
   render() {
     return (
       <div className={this.props.classes.root}>
-        <Snackbar open={this.state.err!=null} autoHideDuration={1000} anchorOrigin={{
+        <Snackbar open={this.state.err!=null} autoHideDuration={2000} anchorOrigin={{
           vertical: 'bottom',
           horizontal: 'left',
         }} onClose={()=>{
@@ -105,9 +107,16 @@ class Password extends React.Component {
                   />
                 </Grid>
                 <Grid item xs={12}>
-                  <Button type="submit" variant="contained" color="primary" className={this.props.classes.button}>
-                    Submit
-                  </Button>
+                  {this.state.progress
+                    ?
+                    <Grid container justify="center">
+                      <CircularProgress/>
+                    </Grid>
+                    :
+                    <Button type="submit" variant="contained" color="primary" className={this.props.classes.button}>
+                      Submit
+                    </Button>
+                  }
                 </Grid>
               </Grid>
             </form>
@@ -125,12 +134,14 @@ class Password extends React.Component {
       return;
     }
     try {
+      this.setState({progress: true});
       const {data} = await axios.post('/api/password', {token, password, newPassword});
       if (data.ok) {
         this.props.history.push('/');
       }
+      this.setState({progress: false});
     } catch (err) {
-      this.setState({err: err.response ? err.response.data.message : err.message});
+      this.setState({err: err.response ? err.response.data.message : err.message, progress: false});
     }
   }
 }
