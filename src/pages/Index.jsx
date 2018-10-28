@@ -10,7 +10,7 @@ import Button from '@material-ui/core/Button';
 
 const styles = {
   root: {
-    padding: 80,
+    padding: 20,
   },
 };
 
@@ -19,7 +19,7 @@ class Index extends React.Component {
     return (
       <div className={this.props.classes.root}>
         <Grid container justify="center" spacing={24}>
-          <Grid item xs={4}>
+          <Grid item xs={12} md={4}>
             <Card>
               <CardContent>
                 <Typography gutterBottom variant="h5" component="h2">
@@ -36,7 +36,7 @@ class Index extends React.Component {
               </CardActions>
             </Card>
           </Grid>
-          <Grid item xs={4}>
+          <Grid item xs={12} md={4}>
             <Card>
               <CardContent>
                 <Typography gutterBottom variant="h5" component="h2">
@@ -53,7 +53,7 @@ class Index extends React.Component {
               </CardActions>
             </Card>
           </Grid>
-          <Grid item xs={4}>
+          <Grid item xs={12} md={4}>
             <Card>
               <CardContent>
                 <Typography gutterBottom variant="h5" component="h2">
