@@ -22,6 +22,25 @@ module.exports = (logger)=>{
     }
   });
 
+  router.get('/shell', authed, async (req, res, next)=>{
+    try {
+      const shell = await lib.ldap.getShell(req.userID);
+      res.json({ok: true, shell});
+    } catch (err) {
+      next(err);
+    }
+  });
+
+  router.post('/shell', authed, async (req, res, next)=>{
+    const {shell} = req.body;
+    try {
+      await lib.ldap.setShell(req.userID, shell);
+      res.json({ok: true, shell});
+    } catch (err) {
+      next(err);
+    }
+  });
+
   router.get('/pubkey', authed, async (req, res, next)=>{
     try {
       const pubkey = await lib.ldap.getPubkey(req.userID);

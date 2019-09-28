@@ -6,6 +6,7 @@ import Index from './pages/Index.jsx';
 import Login from './pages/Login.jsx';
 import Pubkey from './pages/Pubkey.jsx';
 import Password from './pages/Password.jsx';
+import Shell from './pages/Shell.jsx';
 
 const styles = {
   root: {
@@ -37,6 +38,7 @@ class Layout extends React.Component {
               <Route path='/' component={Index} exact />
               <Route path='/pubkey' component={Pubkey} exact />
               <Route path='/password' component={Password} exact />
+              <Route path='/shell' component={Shell} exact />
             </Auth>
           </Switch>
         </Router>
