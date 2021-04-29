@@ -2,12 +2,12 @@
 A simple and lightweight LDAP portal application.
 You can change passwords, login shells, and add or delete public keys.
 
+![login page](docs/img/login.png)
+![index page](docs/img/index.png)
+![pubkey page](docs/img/pubkey.png)
 
-## LDAP Schema
-Here is the LDAP schema that this application is based on.
-[schema](schema)
 
-## how to deploy
+## How to deploy
 
 ### 1. create .env file
 
@@ -24,3 +24,8 @@ PASSWORD=admincn_password
 ```
 docker-compose up -d
 ```
+
+## LDAP Schema
+Here is the LDAP schema that this application is based on.
+[schema](docs/schema)
+
