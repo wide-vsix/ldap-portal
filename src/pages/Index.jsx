@@ -26,7 +26,7 @@ class Index extends React.Component {
                   パスワード変更
                 </Typography>
                 <Typography component="p">
-                  Linux,vpn,sambaのパスワード変更。
+                  Linux,vpn,radius,sambaのパスワード変更。
                 </Typography>
               </CardContent>
               <CardActions>
